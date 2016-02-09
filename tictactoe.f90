@@ -1,9 +1,8 @@
 	PROGRAM TICTACTOE
 
 	CHARACTER * 1 TICTAC(3,3), WINNER
-	LOGICAL OVER
-	LOGICAL CHKPLAY
-	INTEGER MOVE, TURN
+	LOGICAL :: OVER, CHKPLAY
+	INTEGER :: MOVE, TURN
 
 	WRITE(*,*) "PLAY TIC-TAC-TOE. ENTER 1-9 TO PLAY"
 	WRITE(*,*) " "
@@ -19,31 +18,31 @@
 10 TURN = 0
 	WRITE(*,*) "Your move? "
 	READ(*,*) MOVE
-	IF (MOVE .GT. 0 .AND. MOVE .LE. 9) GO TO 11
+	IF (MOVE > 0 .AND. MOVE <= 9) GO TO 11
 	WRITE(*,*) "Invalid input."
 	GO TO 10
 11 IF (CHKPLAY(TICTAC,MOVE)) GO TO 12
 	WRITE(*,*) "Invalid move, box already occupied."
 	GO TO 10
-12 IF (MOVE .EQ. 1) TICTAC(1,1) = "X"
-	IF (MOVE .EQ. 2) TICTAC(1,2) = "X"
-	IF (MOVE .EQ. 3) TICTAC(1,3) = "X"
-	IF (MOVE .EQ. 4) TICTAC(2,1) = "X"
-	IF (MOVE .EQ. 5) TICTAC(2,2) = "X"
-	IF (MOVE .EQ. 6) TICTAC(2,3) = "X"
-	IF (MOVE .EQ. 7) TICTAC(3,1) = "X"
-	IF (MOVE .EQ. 8) TICTAC(3,2) = "X"
-	IF (MOVE .EQ. 9) TICTAC(3,3) = "X"
+12 IF (MOVE == 1) TICTAC(1,1) = "X"
+	IF (MOVE == 2) TICTAC(1,2) = "X"
+	IF (MOVE == 3) TICTAC(1,3) = "X"
+	IF (MOVE == 4) TICTAC(2,1) = "X"
+	IF (MOVE == 5) TICTAC(2,2) = "X"
+	IF (MOVE == 6) TICTAC(2,3) = "X"
+	IF (MOVE == 7) TICTAC(3,1) = "X"
+	IF (MOVE == 8) TICTAC(3,2) = "X"
+	IF (MOVE == 9) TICTAC(3,3) = "X"
 
-14 IF (TURN .EQ. 0) WRITE(*,*) "After your move..."
-	IF (TURN .EQ. 1) WRITE(*,*) "After my move..."
+14 IF (TURN == 0) WRITE(*,*) "After your move..."
+	IF (TURN == 1) WRITE(*,*) "After my move..."
 	DO 20 I=1,3
 	WRITE(*,400) (TICTAC(I,J), J=1,3)
 400 FORMAT(2X,A1,1X,"|",1X,A1,1X,"|",1X,A1,1X)
 	GO TO (15,15,20) I
 15 WRITE(*,*) "---+---+---"
 20 CONTINUE
-	IF (TURN .EQ. 1) GOTO 16
+	IF (TURN == 1) GOTO 16
 
 	CALL CHKOVR(TICTAC,OVER,WINNER)
 	IF (OVER) GOTO 30
@@ -56,7 +55,7 @@
 	GOTO 10
 
 30 WRITE(*,*) "The game is over!"
-	IF (WINNER .EQ. "D") THEN
+	IF (WINNER == "D") THEN
 	WRITE(*,*) "The game is a draw. "
 	ELSE
 	WRITE(*,*) "The winner is: ", WINNER
@@ -99,7 +98,7 @@ DO 110 IC = 1, 3
 
 	DO 140 IR = 1,3
 	DO 145 IC = 1,3
-	IF (TICTAC(IR,IC) .EQ. BLANK) THEN
+	IF (TICTAC(IR,IC) == BLANK) THEN
 	OVER = .FALSE.
 	RETURN
 	END IF
@@ -123,19 +122,19 @@ END
 	DO 149 J = 1,3
 	X = BOARD(PATHS(J,I),1)
 	Y = BOARD(PATHS(J,I),2)
-	IF (TICTAC(X,Y) .EQ. " ") K = 0
-	IF (TICTAC(X,Y) .EQ. "X") K = 1
-	IF (TICTAC(X,Y) .EQ. "O") K = 4
+	IF (TICTAC(X,Y) == " ") K = 0
+	IF (TICTAC(X,Y) == "X") K = 1
+	IF (TICTAC(X,Y) == "O") K = 4
 	PATHSUM(I) = PATHSUM(I) + K
 149 CONTINUE
 150 CONTINUE
 
 	DO 155 I = 1,8
-	IF (PATHSUM(I) .EQ. 8) THEN
+	IF (PATHSUM(I) == 8) THEN
 	DO 154 J = 1,3
 	X = BOARD(PATHS(J,I),1)
 	Y = BOARD(PATHS(J,I),2)
-	IF (TICTAC(X,Y) .EQ. " ") THEN
+	IF (TICTAC(X,Y) == " ") THEN
 	TICTAC(X,Y) = "O"
 	RETURN
 	END IF
@@ -144,11 +143,11 @@ END
 155 CONTINUE
 
 	DO 160 I = 1,8
-	IF (PATHSUM(I) .EQ. 2) THEN
+	IF (PATHSUM(I) == 2) THEN
 	DO 159 J = 1,3
 	X = BOARD(PATHS(J,I),1)
 	Y = BOARD(PATHS(J,I),2)
-	IF (TICTAC(X,Y) .EQ. " ") THEN
+	IF (TICTAC(X,Y) == " ") THEN
 	TICTAC(X,Y) = "O"
 	RETURN
 	END IF
@@ -159,7 +158,7 @@ END
 170 RANDPOS = INT(RAND(0)*9)+1
 	X = BOARD(RANDPOS,1)
 	Y = BOARD(RANDPOS,2)
-	IF (TICTAC(X,Y) .EQ. " ") THEN
+	IF (TICTAC(X,Y) == " ") THEN
 	TICTAC(X,Y) = "O"
 	RETURN
 	END IF
@@ -171,8 +170,8 @@ END
 	LOGICAL FUNCTION SAME(T1,T2,T3)
 	CHARACTER T1,T2,T3
 
-	IF (T1 .EQ. "X" .AND. T2 .EQ. "X" .AND. T3 .EQ. "X") GOTO 200
-	IF (T1 .EQ. "O" .AND. T2 .EQ. "O" .AND. T3 .EQ. "O") GOTO 200
+	IF (T1 == "X" .AND. T2 == "X" .AND. T3 == "X") GOTO 200
+	IF (T1 == "O" .AND. T2 == "O" .AND. T3 == "O") GOTO 200
 	SAME = .FALSE.
 	GOTO 210
 200 SAME = .TRUE.
@@ -194,23 +193,23 @@ END
 	INTEGER MOVE
 
 	GO TO (401,402,403,404,405,406,407,408,409) MOVE
-401 IF (TICTAC(1,1) .EQ. " ") GOTO 411
+401 IF (TICTAC(1,1) == " ") GOTO 411
 	GO TO 410
-402 IF (TICTAC(1,2) .EQ. " ") GOTO 411
+402 IF (TICTAC(1,2) == " ") GOTO 411
 	GO TO 410
-403 IF (TICTAC(1,3) .EQ. " ") GOTO 411
+403 IF (TICTAC(1,3) == " ") GOTO 411
 	GO TO 410
-404 IF (TICTAC(2,1) .EQ. " ") GOTO 411
+404 IF (TICTAC(2,1) == " ") GOTO 411
 	GO TO 410
-405 IF (TICTAC(2,2) .EQ. " ") GOTO 411
+405 IF (TICTAC(2,2) == " ") GOTO 411
 	GO TO 410
-406 IF (TICTAC(2,3) .EQ. " ") GOTO 411
+406 IF (TICTAC(2,3) == " ") GOTO 411
 	GO TO 410
-407 IF (TICTAC(3,1) .EQ. " ") GOTO 411
+407 IF (TICTAC(3,1) == " ") GOTO 411
 	GO TO 410
-408 IF (TICTAC(3,2) .EQ. " ") GOTO 411
+408 IF (TICTAC(3,2) == " ") GOTO 411
 	GO TO 410
-409 IF (TICTAC(3,3) .EQ. " ") GOTO 411
+409 IF (TICTAC(3,3) == " ") GOTO 411
 410 CHKPLAY = .FALSE.
 	GOTO 412
 411 CHKPLAY = .TRUE.
