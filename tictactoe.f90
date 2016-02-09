@@ -18,9 +18,15 @@
 10 TURN = 0
 	WRITE(*,*) "Your move? "
 	READ(*,*) MOVE
-	IF (MOVE > 0 .AND. MOVE <= 9) GO TO 11
-	WRITE(*,*) "Invalid input."
-	GO TO 10
+
+	IF (MOVE > 0 .AND. MOVE <= 9) THEN
+		GO TO 11
+	
+	ELSE 
+		WRITE(*,*) "Invalid input."
+		GO TO 10
+	END IF
+
 11 IF (CHKPLAY(TICTAC,MOVE)) GO TO 12
 	WRITE(*,*) "Invalid move, box already occupied."
 	GO TO 10
