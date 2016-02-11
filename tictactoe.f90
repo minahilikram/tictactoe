@@ -1,222 +1,139 @@
-	PROGRAM TICTACTOE
+program Tictactoe
 
-	CHARACTER * 1 TICTAC(3,3), WINNER
-	LOGICAL :: OVER, CHKPLAY
-	INTEGER :: MOVE, TURN
+	character * 1 tictac(3,3)
+	data tictac / " ", " ",  " ",  " ",  " ",  " ",  " ",  " ",  " " /
 
-	WRITE(*,*) "PLAY TIC-TAC-TOE. ENTER 1-9 TO PLAY"
-	WRITE(*,*) " "
-	WRITE(*,*) " 1 | 2 | 3 "
-	WRITE(*,*) " ---+---+---"
-	WRITE(*,*) " 4 | 5 | 6 "
-	WRITE(*,*) " ---+---+---"
-	WRITE(*,*) " 7 | 8 | 9 "
-	WRITE(*,*) " "
+	integer move, turn
+	logical chkplay, chkinput
 
-	CALL BOARDSETUP(TICTAC)
+	character(len=36) :: format
+	format = "(2X,A1,1X,'|',1X,A1,1X,'|',1X,A1,1X)"
 
-10 TURN = 0
-	WRITE(*,*) "Your move? "
-	READ(*,*) MOVE
+	write(*,*) "PLAY TIC-TAC-TOE. ENTER 1-9 TO PLAY"
+	write(*,*) " "
+	write(*,*) " 1 | 2 | 3 "
+	write(*,*) " ---+---+---"
+	write(*,*) " 4 | 5 | 6 "
+	write(*,*) " ---+---+---"
+	write(*,*) " 7 | 8 | 9 "
+	write(*,*) " "
 
-	IF (MOVE > 0 .AND. MOVE <= 9) THEN
-		GO TO 11
+	move = 0
+
+	do
+		call getinput(turn, move);
+
+		if (chkinput(move, tictac)) then
+
+			if (turn == 0) write(*,*) "After your move..."
+			if (turn == 1) write(*,*) "After my move..."
+
+			do i = 1,3
+				write(*,format) (tictac(i,j), j=1,3)
+				write(*,*) "---+---+---"
+			end do
+
+			exit
+		end if
+	end do
+end
+
+subroutine getinput(turn, move)
+	integer move, turn
+
+	turn = 0
+	write(*,*) "Your move? "
+	read(*,*) move
+end
+
+logical function chkinput(move, tictac)
+
+	character * 1 tictac(3,3)
+	integer move
+	logical chkplay
 	
-	ELSE 
-		WRITE(*,*) "Invalid input."
-		GO TO 10
-	END IF
+	if (move > 0 .and. move <=9) then
+		if (chkplay(tictac, move)) then
+			chkinput = .true.
+		else
+			chkinput = .false.
+			write(*,*) "Invalid move, box already occupied."
+		end if
+	else
+		chkinput = .false.
+		write(*,*) "Invalid input."
+	end if
 
-11 IF (CHKPLAY(TICTAC,MOVE)) GO TO 12
-	WRITE(*,*) "Invalid move, box already occupied."
-	GO TO 10
-12 IF (MOVE == 1) TICTAC(1,1) = "X"
-	IF (MOVE == 2) TICTAC(1,2) = "X"
-	IF (MOVE == 3) TICTAC(1,3) = "X"
-	IF (MOVE == 4) TICTAC(2,1) = "X"
-	IF (MOVE == 5) TICTAC(2,2) = "X"
-	IF (MOVE == 6) TICTAC(2,3) = "X"
-	IF (MOVE == 7) TICTAC(3,1) = "X"
-	IF (MOVE == 8) TICTAC(3,2) = "X"
-	IF (MOVE == 9) TICTAC(3,3) = "X"
+end
 
-14 IF (TURN == 0) WRITE(*,*) "After your move..."
-	IF (TURN == 1) WRITE(*,*) "After my move..."
-	DO 20 I=1,3
-	WRITE(*,400) (TICTAC(I,J), J=1,3)
-400 FORMAT(2X,A1,1X,"|",1X,A1,1X,"|",1X,A1,1X)
-	GO TO (15,15,20) I
-15 WRITE(*,*) "---+---+---"
-20 CONTINUE
-	IF (TURN == 1) GOTO 16
 
-	CALL CHKOVR(TICTAC,OVER,WINNER)
-	IF (OVER) GOTO 30
+logical function chkplay(tictac, move)
+	character * 1 tictac(3,3)
+	integer move
 
-	TURN = 1
-	CALL COMPMOVE(TICTAC)
-	GOTO 14
-16 CALL CHKOVR(TICTAC,OVER,WINNER)
-	IF (OVER) GOTO 30
-	GOTO 10
-
-30 WRITE(*,*) "The game is over!"
-	IF (WINNER == "D") THEN
-	WRITE(*,*) "The game is a draw. "
-	ELSE
-	WRITE(*,*) "The winner is: ", WINNER
-	END IF
-	STOP
-	END
-
-	SUBROUTINE CHKOVR(TICTAC,OVER,WINNER)
-	CHARACTER * 1 TICTAC(3,3), WINNER
-	LOGICAL OVER
-
-	CHARACTER * 1 BLANK, DRAW
-	PARAMETER (BLANK = ' ', DRAW = 'D')
-
-	LOGICAL SAME
-	LOGICAL DSAME
-	INTEGER IR, IC
-
-	OVER = .TRUE.
-
-	DO 100 IR = 1, 3
-	IF (SAME(TICTAC(IR,1),TICTAC(IR,2),TICTAC(IR,3))) THEN
-	WINNER = TICTAC(IR,1)
-	RETURN
-	END IF
-100 CONTINUE
-
-DO 110 IC = 1, 3
-	IF (SAME(TICTAC(1,IC),TICTAC(2,IC),TICTAC(3,IC))) THEN
-	WINNER = TICTAC(1,IC)
-	RETURN
-	END IF
-110 CONTINUE
-
-	DSAME = SAME(TICTAC(1,1),TICTAC(2,2),TICTAC(3,3)) .OR. SAME(TICTAC(1,3),TICTAC(2,2),TICTAC(3,1))
-	IF (DSAME) THEN
-	WINNER = TICTAC(2,2)
-	RETURN
-	END IF
-
-	DO 140 IR = 1,3
-	DO 145 IC = 1,3
-	IF (TICTAC(IR,IC) == BLANK) THEN
-	OVER = .FALSE.
-	RETURN
-	END IF
-145 CONTINUE
-140 CONTINUE
-
-WINNER = DRAW
-
-RETURN
-END
-
-	SUBROUTINE COMPMOVE(TICTAC)
-	CHARACTER * 1 TICTAC(3,3)
-	INTEGER PATHS(3,8), PATHSUM(8)
-	DATA PATHS/1,2,3,4,5,6,7,8,9,1,4,7,2,5,8,3,6,9,1,5,9,3,5,7/
-	INTEGER BOARD(9,2), K, X, Y, RANDPOS
-	DATA BOARD/1,1,1,2,2,2,3,3,3,1,2,3,1,2,3,1,2,3/
-
-	DO 150 I = 1,8
-	PATHSUM(I) = 0
-	DO 149 J = 1,3
-	X = BOARD(PATHS(J,I),1)
-	Y = BOARD(PATHS(J,I),2)
-	IF (TICTAC(X,Y) == " ") K = 0
-	IF (TICTAC(X,Y) == "X") K = 1
-	IF (TICTAC(X,Y) == "O") K = 4
-	PATHSUM(I) = PATHSUM(I) + K
-149 CONTINUE
-150 CONTINUE
-
-	DO 155 I = 1,8
-	IF (PATHSUM(I) == 8) THEN
-	DO 154 J = 1,3
-	X = BOARD(PATHS(J,I),1)
-	Y = BOARD(PATHS(J,I),2)
-	IF (TICTAC(X,Y) == " ") THEN
-	TICTAC(X,Y) = "O"
-	RETURN
-	END IF
-154 CONTINUE
-	END IF
-155 CONTINUE
-
-	DO 160 I = 1,8
-	IF (PATHSUM(I) == 2) THEN
-	DO 159 J = 1,3
-	X = BOARD(PATHS(J,I),1)
-	Y = BOARD(PATHS(J,I),2)
-	IF (TICTAC(X,Y) == " ") THEN
-	TICTAC(X,Y) = "O"
-	RETURN
-	END IF
-159 CONTINUE
-	END IF
-160 CONTINUE
-
-170 RANDPOS = INT(RAND(0)*9)+1
-	X = BOARD(RANDPOS,1)
-	Y = BOARD(RANDPOS,2)
-	IF (TICTAC(X,Y) == " ") THEN
-	TICTAC(X,Y) = "O"
-	RETURN
-	END IF
-	GO TO 170
-
-	RETURN
-	END
-
-	LOGICAL FUNCTION SAME(T1,T2,T3)
-	CHARACTER T1,T2,T3
-
-	IF (T1 == "X" .AND. T2 == "X" .AND. T3 == "X") GOTO 200
-	IF (T1 == "O" .AND. T2 == "O" .AND. T3 == "O") GOTO 200
-	SAME = .FALSE.
-	GOTO 210
-200 SAME = .TRUE.
-210 END
-
-	SUBROUTINE BOARDSETUP(TICTAC)
-	CHARACTER * 1 TICTAC(3,3)
-
-	DO 310 I = 1,3
-	DO 300 J = 1,3
-	TICTAC(I,J) = " "
-300 CONTINUE
-310 CONTINUE
-	RETURN
-	END
-
-	LOGICAL FUNCTION CHKPLAY(TICTAC,MOVE)
-	CHARACTER * 1 TICTAC(3,3)
-	INTEGER MOVE
-
-	GO TO (401,402,403,404,405,406,407,408,409) MOVE
-401 IF (TICTAC(1,1) == " ") GOTO 411
-	GO TO 410
-402 IF (TICTAC(1,2) == " ") GOTO 411
-	GO TO 410
-403 IF (TICTAC(1,3) == " ") GOTO 411
-	GO TO 410
-404 IF (TICTAC(2,1) == " ") GOTO 411
-	GO TO 410
-405 IF (TICTAC(2,2) == " ") GOTO 411
-	GO TO 410
-406 IF (TICTAC(2,3) == " ") GOTO 411
-	GO TO 410
-407 IF (TICTAC(3,1) == " ") GOTO 411
-	GO TO 410
-408 IF (TICTAC(3,2) == " ") GOTO 411
-	GO TO 410
-409 IF (TICTAC(3,3) == " ") GOTO 411
-410 CHKPLAY = .FALSE.
-	GOTO 412
-411 CHKPLAY = .TRUE.
-412 END
+	select case (move)
+		case (1)
+			if (tictac(1,1) == " ") then
+				chkplay = .true.
+				tictac(1,1) = "X"
+			else
+				chkplay = .false.
+			end if
+		case (2)
+			if (tictac(1,2) == " ") then
+				chkplay = .true.
+				tictac(1,2) = "X"
+			else
+				chkplay = .false.
+			end if
+		case (3)
+			if (tictac(1,3) == " ") then
+				chkplay = .true.
+				tictac(1,3) = "X"
+			else
+				chkplay = .false.
+			end if
+		case (4)
+			if (tictac(2,1) == " ") then
+				chkplay = .true.
+				tictac(2,1) = "X"
+			else
+				chkplay = .false.
+			end if
+		case (5)
+			if (tictac(2,2) == " ") then
+				chkplay = .true.
+				tictac(2,2) = "X"
+			else
+				chkplay = .false.
+			end if
+		case (6)
+			if (tictac(2,3) == " ") then
+				chkplay = .true.
+				tictac(2,3) = "X"
+			else
+				chkplay = .false.
+			end if
+		case (7)
+			if (tictac(3,1) == " ") then
+				chkplay = .true.
+				tictac(3,1) = "X"
+			else
+				chkplay = .false.
+			end if
+		case (8)
+			if (tictac(3,2) == " ") then
+				chkplay = .true.
+				tictac(3,2) = "X"
+			else
+				chkplay = .false.
+			end if
+		case (9)
+			if (tictac(3,3) == " ") then
+				chkplay = .true.
+				tictac(3,3) = "X"
+			else
+				chkplay = .false.
+			end if
+	end select
+end
