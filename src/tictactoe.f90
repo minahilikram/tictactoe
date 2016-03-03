@@ -1,14 +1,38 @@
-program Tictactoe
+!*********************************************
+! Minahil Ikram       0721370
+! CIS*3190            Tic-Tac-Toe/Assignment 1
+! February 11th, 2016
+!*********************************************
 
-    character * 1 tictac(3,3), winner
+
+
+!Program that Plays Tic-Tac-Toe with the Computer
+
+!*******************************
+!TicTacToe
+ 
+!purpose: This function runs the main logic
+!*********************************
+program Tictactoe
+    
+    !the main board, 2D array
+    character, dimension(3,3) :: tictac(3,3)
+    !initializes the 2D array (tictac)
     data tictac / " ", " ",  " ",  " ",  " ",  " ",  " ",  " ",  " " /
 
+    !keeps track of who the winner is, or if it's a draw
+    character :: winner
+    
+    !move is the input by the user. turn is used to keep track of user vs.computer
     integer :: move, turn
+    
+    !chkinput checks user input for validation. over finds out whether the game is over
     logical :: chkinput, over
 
-    character(len=36) :: format
+    character(len=36) :: format !used to print the playing board
     format = "(2X,A1,1X,'|',1X,A1,1X,'|',1X,A1,1X)"
 
+    !initial playing board print
     write(*,*) "PLAY TIC-TAC-TOE. ENTER 1-9 TO PLAY"
     write(*,*) " "
     write(*,*) " 1 | 2 | 3 "
@@ -18,13 +42,16 @@ program Tictactoe
     write(*,*) " 7 | 8 | 9 "
     write(*,*) " "
 
+    !loop that keeps running until game is over
     do
         call getinput(turn, move);
 
         if (chkinput(move, tictac)) then
 
+            !print board simply prints the current board after each move
             call printboard(tictac, format, turn)
 
+            !if statement goes through if it's computer's turn
             if (turn == 1) then
                 call chkovr(tictac, over, winner)
 
@@ -34,7 +61,7 @@ program Tictactoe
                     if (winner == "D") then
                         write(*,*) "The game is a draw. "
                     else
-                        write(*,*) "The winner is: ", WINNER
+                        write(*,*) "The winner is: ", winner
                     end if
                     stop
                 else
@@ -54,7 +81,7 @@ program Tictactoe
                 if (winner == "D") then
                     write(*,*) "The game is a draw. "
                 else
-                    write(*,*) "The winner is: ", WINNER
+                    write(*,*) "The winner is: ", winner
                 end if
                 stop
             else
@@ -65,8 +92,16 @@ program Tictactoe
     end do
 end
 
+
+!*******************************
+!compmove
+ 
+!purpose: This subroutine makes the computer's move.
+!preCondition: Accepts the 2D array (tictac board).
+!postCondition: Move has been made, if one could have been made.
+!*********************************
 subroutine compmove(tictac)
-    character * 1 tictac(3,3)
+    character, dimension(3,3) :: tictac(3,3)
     integer :: paths(3,8), pathsum(8)
     data paths /1,2,3,4,5,6,7,8,9,1,4,7,2,5,8,3,6,9,1,5,9,3,5,7/
     integer :: board(9,2), k, x, y, randpos
@@ -127,8 +162,17 @@ subroutine compmove(tictac)
     return
 end
 
+
+!*******************************
+!chkovr
+ 
+!purpose: This subroutine checks whether the game is over & who the winner is.
+!preCondition: Accepts the 2D array (tictac board), over & winner boolean.
+!postCondition: Changes over & winner boolean.
+!*********************************
 subroutine chkovr(tictac, over, winner)
-    character * 1 tictac(3,3), winner
+    character, dimension(3,3) :: tictac(3,3)
+    character :: winner
     logical :: over
 
     character * 1 blank, draw
@@ -175,6 +219,14 @@ subroutine chkovr(tictac, over, winner)
     return
 end
 
+
+!*******************************
+!same
+ 
+!purpose: This function in what direction, if at all the inputs are the same.
+!preCondition: Accepts the three inputs.
+!postCondition: Returns same appropriately.
+!*********************************
 logical function same(t1, t2, t3)
     character t1, t2, t3
 
@@ -187,9 +239,17 @@ logical function same(t1, t2, t3)
     end if
 end
 
+
+!*******************************
+!printboard
+ 
+!purpose: This subroutine simply prints the board.
+!preCondition: Accepts the 2D array (tictac board), format & turn
+!postCondition: Prints the board.
+!*********************************
 subroutine printboard(tictac, format, turn)
 
-    character * 1 tictac(3,3)
+    character, dimension(3,3) :: tictac(3,3)
     character(len=36) :: format
     integer :: turn
 
@@ -214,7 +274,7 @@ end
 
 logical function chkinput(move, tictac)
 
-    character * 1 tictac(3,3)
+    character, dimension(3,3) :: tictac(3,3)
     integer :: move
     logical :: chkplay
     
@@ -232,9 +292,15 @@ logical function chkinput(move, tictac)
 
 end
 
-
+!*******************************
+!printboard
+ 
+!purpose: This function checks if the play can be made.
+!preCondition: Accepts the 2D array (tictac board) & the move made.
+!postCondition: Returns true or false for the play.
+!*********************************
 logical function chkplay(tictac, move)
-    character * 1 tictac(3,3)
+    character, dimension(3,3) :: tictac(3,3)
     integer :: move
 
     select case (move)

@@ -1,2 +1,0 @@
-Fortran Tic Tac Toe
-===================
