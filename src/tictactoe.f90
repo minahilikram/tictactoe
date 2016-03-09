@@ -1,11 +1,3 @@
-!*********************************************
-! Minahil Ikram       0721370
-! CIS*3190            Tic-Tac-Toe/Assignment 1
-! February 11th, 2016
-!*********************************************
-
-
-
 !Program that Plays Tic-Tac-Toe with the Computer
 
 !*******************************
