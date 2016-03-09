@@ -1,4 +1,4 @@
-# tictactoe-FORTRAN
+# tictactoe
 
 [Tictactoe](https://en.wikipedia.org/wiki/Sudoku) an implementation using FORTRAN Algorithms.
 
@@ -7,13 +7,13 @@
 ## Install
 
 ```sh
-$ git clone https://github.com/minahilikram/tictactoe-FORTRAN
+$ git clone https://github.com/minahilikram/tictactoe
 ```
 
 ## Usage
 
 ```sh
-$ cd tictactoe-FORTRAN/
+$ cd tictactoe/
 $ make
 $ make run
 ```
